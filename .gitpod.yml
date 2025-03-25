@@ -1,0 +1,21 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - name: setup
+    init: |
+      # Generate mvnw if missing (only needed for new projects)
+      if [ ! -f "./mvnw" ]; then
+        mvn wrapper:wrapper
+      fi
+      ./mvnw clean install
+      gp sync-done build
+
+  - name: run
+    command: |
+      gp sync-await build
+      ./mvnw spring-boot:run
+
+ports:
+  - port: 8080
+    onOpen: open-browser
